@@ -16,6 +16,12 @@ import { NavLink, useLocation } from "react-router-dom";
  * - <a href> diganti <NavLink to> supaya terintegrasi react-router
  * - Warna diselaraskan ke palet ultraviolet/scuba/cloud
  * - Item aktif (halaman yang sedang dibuka) mendapat aksen warna
+ * - Container desktop `items-center` + magnify max dikecilin, supaya
+ *   ikon yang membesar gak nongol keluar dari pil-nya sendiri.
+ * - Tooltip label (nama menu pas di-hover) sekarang muncul DI BAWAH
+ *   ikon, bukan di atas — soalnya dock ini sekarang nempel di paling
+ *   atas layar (header fixed), jadi ruang di atas ikon kehabisan
+ *   tempat dan labelnya kepotong sama tepi browser.
  */
 export type DockItem = {
   title: string;
@@ -129,7 +135,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "mx-auto hidden md:flex h-14 items-end gap-3 rounded-2xl px-4 pb-2",
+        "mx-auto hidden md:flex h-16 items-center gap-3 rounded-2xl px-4 py-3",
         "bg-white/60 backdrop-blur-md border border-white/50 shadow-card",
         className
       )}
@@ -162,10 +168,10 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  const widthTransform = useTransform(distance, [-150, 0, 150], [40, 68, 40]);
-  const heightTransform = useTransform(distance, [-150, 0, 150], [40, 68, 40]);
-  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 32, 20]);
-  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 32, 20]);
+  const widthTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+  const heightTransform = useTransform(distance, [-150, 0, 150], [40, 60, 40]);
+  const widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 28, 20]);
+  const heightTransformIcon = useTransform(distance, [-150, 0, 150], [20, 28, 20]);
 
   const width = useSpring(widthTransform, {
     mass: 0.1,
@@ -203,10 +209,10 @@ function IconContainer({
         <AnimatePresence>
           {hovered && (
             <motion.div
-              initial={{ opacity: 0, y: 6, x: "-50%" }}
+              initial={{ opacity: 0, y: -6, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
-              exit={{ opacity: 0, y: 6, x: "-50%" }}
-              className="absolute -top-9 left-1/2 w-fit whitespace-pre rounded-md
+              exit={{ opacity: 0, y: -6, x: "-50%" }}
+              className="absolute top-full left-1/2 mt-2 w-fit whitespace-pre rounded-md
                 border border-white/50 bg-white/90 px-2.5 py-0.5 text-xs font-body
                 font-medium text-ink shadow-card"
             >

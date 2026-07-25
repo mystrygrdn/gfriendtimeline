@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { AnimatePresence, motion } from "framer-motion";
+import { IconArrowRight } from "@tabler/icons-react";
+import AlbumDetailModal from "./album-detail-modal";
 
 /**
  * ============================================================
@@ -14,16 +16,25 @@ import { AnimatePresence, motion } from "framer-motion";
  *   ringan & stabil, diganti glow gradient CSS di belakang teks.
  * - Progress scroll dihitung dari TINGGI KONTAINER INI SENDIRI
  *   (bukan seluruh document), lewat elemen `sticky`, supaya efek
- *   ini tetap terkontrol walau ada konten lain (Timeline) di bawahnya.
- * - Konten tiap section dipetakan ke milestone era GFRIEND asli
- *   (Season of Glass -> Time for the Moon Night -> Season of Memories).
+ *   ini tetap terkontrol walau ada konten lain di bawahnya.
+ * - Tiap section (kalau ada `album`-nya) dapet tombol "Lihat Detail
+ *   Album" yang buka popup — bukan pindah halaman — isinya galeri
+ *   foto ala polaroid (bisa di-drag), tracklist, dan achievement.
  */
+
+interface AlbumData {
+  cover: string; // path/URL foto cover utama - taruh file asli di /public/albums/...
+  teasers?: string[]; // foto-foto tambahan buat galeri polaroid
+  tracklist: string[];
+  achievements?: string[];
+}
 
 interface HeroSection {
   eyebrow: string;
   title: string;
   lines: string[];
   color: string; // hex, dipakai untuk nebula/starfield tint & glow
+  album?: AlbumData; // opsional - kalau ada, tombol "Lihat Detail Album" muncul
 }
 
 const sections: HeroSection[] = [
@@ -32,24 +43,49 @@ const sections: HeroSection[] = [
     title: "GFRIEND",
     lines: ["Six Voices, One Journey.", "From Season of Glass to Today."],
     color: "#8672B0",
+    // section intro sengaja gak dikasih `album`, jadi tombolnya gak muncul di sini
   },
   {
     eyebrow: "Debut  · 15 Jan 2015",
     title: "SEASON OF GLASS",
     lines: ["Kisah dimulai di lorong sekolah,", "dari setangkai 'Glass Bead'."],
     color: "#5F4B8B",
+    album: {
+      cover: "/albums/season-of-glass/cover.jpg",
+      teasers: [
+        "/albums/season-of-glass/teaser-1.jpg",
+        "/albums/season-of-glass/teaser-2.jpg",
+        "/albums/season-of-glass/teaser-3.jpg",
+      ],
+      tracklist: ["Intro (Season of Glass)", "Glass Bead", "Neverland", "White"],
+      achievements: [
+        "Debut mini album, memperkenalkan konsep 'Glass Bead'",
+        "Title track masuk chart musik digital domestik",
+      ],
+    },
   },
   {
     eyebrow: "The 2nd Mini Album · 23 Jul 2015",
     title: "FLOWER BUD",
     lines: ["Nuansa retro manis di bawah cahaya bulan —", "puncak kejayaan GFRIEND."],
     color: "#1F6E8C",
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Luv Star", "Me Gustas Tu", "One", "Trust"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
   {
     eyebrow: "The 3rd Mini Album · 25 Jan 2016",
     title: "SNOWFLAKE",
     lines: ["Sepuluh tahun kemudian,", "keenam Buddy kembali bersama."],
     color: "#3D93B4",
+    // TODO: isi `album` di sini kalau mau tombolnya aktif juga, formatnya
+    // sama kayak SEASON OF GLASS / FLOWER BUD di atas.
   },
   {
     eyebrow: "The 1st Studio Albums · 11 Jul 2016",
@@ -101,6 +137,7 @@ export default function GfriendHero() {
 
   const [sectionIndex, setSectionIndex] = useState(0);
   const [ready, setReady] = useState(false);
+  const [isAlbumOpen, setIsAlbumOpen] = useState(false);
 
   const three = useRef<{
     scene: THREE.Scene | null;
@@ -471,8 +508,48 @@ export default function GfriendHero() {
               </motion.div>
             </AnimatePresence>
           </div>
+
+          {/* Tombol popup album - cuma muncul kalau section ini punya `album`.
+              Sengaja BUKAN <Link>/navigasi halaman, cuma buka state modal. */}
+          <AnimatePresence mode="wait">
+            {active.album && (
+              <motion.button
+                key={`album-btn-${active.title}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+                onClick={() => setIsAlbumOpen(true)}
+                className="mt-8 inline-flex items-center gap-2 rounded-full border
+                  border-cloud/30 bg-cloud/10 px-6 py-2.5 font-body text-sm text-cloud
+                  backdrop-blur-sm transition-colors hover:bg-cloud hover:text-ink"
+              >
+                Lihat Detail Album
+                <IconArrowRight className="h-4 w-4" />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </div>
+
+      {/* Popup detail album - ditaruh di luar div sticky/overflow-hidden
+          supaya render-nya gak ke-clip, walau posisinya `fixed`. */}
+      <AnimatePresence>
+        {isAlbumOpen && active.album && (
+          <AlbumDetailModal
+            album={{
+              eyebrow: active.eyebrow,
+              title: active.title,
+              color: active.color,
+              cover: active.album.cover,
+              teasers: active.album.teasers,
+              tracklist: active.album.tracklist,
+              achievements: active.album.achievements,
+            }}
+            onClose={() => setIsAlbumOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -15,7 +15,7 @@ import { members } from "../data/albums";
  */
 export default function ActivitiesPage() {
   return (
-    <main className="max-w-5xl mx-auto px-4 py-16">
+    <main className="max-w-5xl mx-auto px-4 pt-28 pb-16">
       <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ultraviolet">
         Member Activities
       </h1>

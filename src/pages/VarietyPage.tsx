@@ -22,7 +22,7 @@ export default function VarietyPage() {
 
   return (
     <main className="pb-16">
-      <div className="max-w-6xl mx-auto px-4 pt-16">
+      <div className="max-w-5xl mx-auto px-4 pt-28 pb-16">
         <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ultraviolet">
           Variety Shows
         </h1>

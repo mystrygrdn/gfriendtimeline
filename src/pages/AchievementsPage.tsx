@@ -6,7 +6,7 @@ const palette = ["#5F4B8B", "#1F6E8C", "#8672B0", "#3D93B4"];
 
 export default function AchievementsPage() {
   return (
-    <main className="max-w-5xl mx-auto px-4 py-16">
+    <main className="max-w-5xl mx-auto px-4 pt-28 pb-16">
       <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ultraviolet">
         Achievements
       </h1>

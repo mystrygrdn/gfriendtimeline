@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import {
   IconHome2,
   IconUsers,
@@ -15,19 +17,41 @@ const dockItems: DockItem[] = [
 ];
 
 export default function Navbar() {
-  return (
-    <header className="sticky top-0 z-30 bg-cloud/70 backdrop-blur-md border-b border-ink/5">
-      {/* relative + justify-center: logo dilepas dari flow (absolute) supaya
-          dock BENERAN center relatif ke lebar penuh header, bukan cuma
-          "sisa ruang setelah logo". Ini yang bikin dia gak lari ke luar
-          layar lagi di layar sempit. */}
-      <div className="relative max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-center min-h-[56px]">
-        <span className="absolute left-4 md:left-6 font-display text-lg font-extrabold text-ultraviolet">
-          GFRIEND HUB
-        </span>
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+  const lastY = useRef(0);
 
+  // Sembunyi pas scroll ke bawah, muncul lagi pas scroll ke atas (walau
+  // cuma dikit). Di dekat paling atas halaman, dipaksa selalu tampil
+  // supaya gak "kedip" pas orang baru buka halaman.
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = lastY.current;
+    const delta = latest - previous;
+
+    if (latest < 80) {
+      setHidden(false);
+    } else if (delta > 4) {
+      setHidden(true);
+    } else if (delta < -4) {
+      setHidden(false);
+    }
+    lastY.current = latest;
+  });
+
+  return (
+    <motion.header
+      initial={false}
+      animate={{ y: hidden ? "-130%" : "0%" }}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className="fixed top-0 inset-x-0 z-30"
+    >
+      {/* Sengaja TANPA background/border selebar layar - biar apa pun
+          yang ada di belakangnya (hero, atau halaman lain) tetap
+          kelihatan penuh. Yang punya "badan" visual cuma pil logo &
+          pil dock-nya sendiri, ngambang independen. */}
+      <div className="relative max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-center">
         <FloatingDock items={dockItems} mobileClassName="relative" />
       </div>
-    </header>
+    </motion.header>
   );
 }
