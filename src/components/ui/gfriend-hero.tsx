@@ -20,6 +20,10 @@ import AlbumDetailModal from "./album-detail-modal";
  * - Tiap section (kalau ada `album`-nya) dapet tombol "Lihat Detail
  *   Album" yang buka popup — bukan pindah halaman — isinya galeri
  *   foto ala polaroid (bisa di-drag), tracklist, dan achievement.
+ * - Warna & posisi kamera tiap section SEKARANG DI-GENERATE OTOMATIS
+ *   dari panjang `rawSections` (lihat `colorAtProgress` &
+ *   `cameraPositions` di bawah) — bukan di-hardcode manual, supaya
+ *   selalu proporsional berapa pun banyaknya era yang kamu isi.
  */
 
 interface AlbumData {
@@ -37,19 +41,19 @@ interface HeroSection {
   album?: AlbumData; // opsional - kalau ada, tombol "Lihat Detail Album" muncul
 }
 
-const sections: HeroSection[] = [
+// Data mentah tiap era - TANPA `color`, soalnya warnanya di-generate
+// otomatis di bawah berdasarkan posisi era ini di sepanjang timeline.
+const rawSections: Omit<HeroSection, "color">[] = [
   {
     eyebrow: "2015 — Forever",
     title: "GFRIEND",
-    lines: ["Six Voices, One Journey.", "From Season of Glass to Today."],
-    color: "#8672B0",
+    lines: ["Six Voices, One Journey.", "From Season of Glass to Season of Memories."],
     // section intro sengaja gak dikasih `album`, jadi tombolnya gak muncul di sini
   },
   {
     eyebrow: "Debut  · 15 Jan 2015",
     title: "SEASON OF GLASS",
-    lines: ["Kisah dimulai di lorong sekolah,", "dari setangkai 'Glass Bead'."],
-    color: "#5F4B8B",
+    lines: ["A debut wrapped in schoolyard innocence,", "framed by the fragile shimmer of a glass bead."],
     album: {
       cover: "/albums/season-of-glass/cover.jpg",
       teasers: [
@@ -57,7 +61,7 @@ const sections: HeroSection[] = [
         "/albums/season-of-glass/teaser-2.jpg",
         "/albums/season-of-glass/teaser-3.jpg",
       ],
-      tracklist: ["Intro (Season of Glass)", "Glass Bead", "Neverland", "White"],
+      tracklist: ["Intro (Season of Glass)", "Glass Bead", "Neverland", "White", "Glass Bead (Instrumental)"],
       achievements: [
         "Debut mini album, memperkenalkan konsep 'Glass Bead'",
         "Title track masuk chart musik digital domestik",
@@ -67,62 +71,333 @@ const sections: HeroSection[] = [
   {
     eyebrow: "The 2nd Mini Album · 23 Jul 2015",
     title: "FLOWER BUD",
-    lines: ["Nuansa retro manis di bawah cahaya bulan —", "puncak kejayaan GFRIEND."],
-    color: "#1F6E8C",
+    lines: ["Blooming into their brightest colors,", "a whirlwind crush wrapped in sunny rhythm."],
     album: {
       cover: "/albums/flower-bud/cover.jpg",
       teasers: [
         "/albums/flower-bud/teaser-1.jpg",
         "/albums/flower-bud/teaser-2.jpg",
       ],
-      tracklist: ["Luv Star", "Me Gustas Tu", "One", "Trust"],
+      tracklist: ["Intro (Flower Bud)", "Me Gustas Tu", "Under the Sky", "One", "My Buddy", "Me Gustas Tu (Instrumental)"],
       achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
     },
   },
   {
     eyebrow: "The 3rd Mini Album · 25 Jan 2016",
     title: "SNOWFLAKE",
-    lines: ["Sepuluh tahun kemudian,", "keenam Buddy kembali bersama."],
-    color: "#3D93B4",
-    // TODO: isi `album` di sini kalau mau tombolnya aktif juga, formatnya
-    // sama kayak SEASON OF GLASS / FLOWER BUD di atas.
+    lines: ["A colder, sharper edge emerges,", "vulnerability dressed in a bolder sound."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Intro (Snowflake)", "Rough", "Say my name", "Luv Star", "Someday", "TRUST", "Rough (Inst.)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
   {
     eyebrow: "The 1st Studio Albums · 11 Jul 2016",
     title: "LOL",
-    lines: ["Six Voices, One Journey.", "From Season of Glass to Today."],
-    color: "#8672B0",
+    lines: ["Laughter and heartbreak intertwined,", "a fuller sound for a fuller story."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["INTRO", "Fall in Love", "NAVILLERA", "LOL", "Distance", "Water Flower", "Mermaid", "Sunshine", "Compas", "Click", "Gone with the wind", "NAVILLERA (Instrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
   {
     eyebrow: "The 4th Mini Album  · 6 Mar 2017",
     title: "THE AWAKENING",
-    lines: ["Kisah dimulai di lorong sekolah,", "dari setangkai 'Glass Bead'."],
-    color: "#5F4B8B",
+    lines: ["Stepping out of the schoolyard for good,", "a quiet awakening into womanhood."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Hear The Wind Sing", "FINGERTIP", "Contrail", "Please Save My Earth", "Rain In The Spring Time", "Crush"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
   {
     eyebrow: "The 5th Mini Album · 1 Aug 2017",
     title: "PARALLEL",
-    lines: ["Nuansa retro manis di bawah cahaya bulan —", "puncak kejayaan GFRIEND."],
-    color: "#1F6E8C",
+    lines: ["A fairytale whispered just for two,", "innocence and longing walking side by side."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["INTRO (BELIEF)", "LOVE WHISPER", "AVE MARIA", "ONE-HALF", "LIFE IS A PARTY", "RED UMBRELLA", "FALLING ASLEEP AGAIN", "LOVE WHISPER (Instrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
   {
     eyebrow: "The 1st Repackage Album · 13 Sep 2017",
     title: "RAINBOW",
-    lines: ["Sepuluh tahun kemudian,", "keenam Buddy kembali bersama."],
-    color: "#3D93B4",
+    lines: ["Color returns after the rain,", "a rainbow repackaged with new light."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Intro (Belief)", "Love Whisper", "Summer Rain", "Rainbow", "Ave Maria", "One-Half", "Life Is A Party", "Red Umbrella", "Falling Asleep Again", "Summer Rain (Intstrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 6th Mini Album · 30 Apr 2018",
+    title: "TIME FOR THE MOON NIGHT",
+    lines: ["Under a moonlit sky they gather,", "a fantasy spun from starlight and longing."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Intro (Daytime)", "Time for the moon night", "Love Bug", "Flower Garden", "Tik Tik", "Bye", "You are my star", "Time for the moon night (Intstrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 1st Japanese Best Album  · 23 May 2018",
+    title: "GFRIEND 1st BEST",
+    lines: ["Their story retold in another tongue,", "a first best-of for fans across the sea."],
+    album: {
+      cover: "/albums/season-of-glass/cover.jpg",
+      teasers: [
+        "/albums/season-of-glass/teaser-1.jpg",
+        "/albums/season-of-glass/teaser-2.jpg",
+        "/albums/season-of-glass/teaser-3.jpg",
+      ],
+      tracklist: ["Glass Bead -JP ver.-", "Me Gustas Tu -JP ver.-", "Rough -JP ver.-", "NAVILLERA -JP ver.-", "Love Whisper -JP ver.-", "TRUST -JP ver.-"],
+      achievements: [
+        "Debut mini album, memperkenalkan konsep 'Glass Bead'",
+        "Title track masuk chart musik digital domestik",
+      ],
+    },
+  },
+  {
+    eyebrow: "The 7th Mini Album · 19 Jul 2018",
+    title: "SUNNY SUMMER",
+    lines: ["A bright detour into summer sunshine,", "lighthearted days before the season turns."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Sunny Summer", "Vacation", "Sweety", "Windy Windy", "Love In The Air"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 1st Japanese Single · 25 Jan 2016",
+    title: "Memoria / 夜 (Time for the moon night)",
+    lines: ["A memory carried across borders,", "a night that lingers long after it ends."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Memoria", "Time for the moon night -JP ver.-"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 2nd Studio Album · 14 Jan 2019",
+    title: "TIME FOR US",
+    lines: ["Six voices finding their own time,", "an album built for growing up together."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Sunrise", "You are not alone", "L.U.V.", "GLOW", "Our Secret", "Only 1", "Truly Love", "Show Up", "It's You", "A Starry Sky", "Love Oh Love", "Memoria (Korean Ver.)", "Sunrise (Instrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 2nd Japanese Single  · 13 Feb 2019",
+    title: "SUNRISE",
+    lines: ["A new dawn opens over old ground,", "hope rising quietly with the morning light."],
+    album: {
+      cover: "/albums/season-of-glass/cover.jpg",
+      teasers: [
+        "/albums/season-of-glass/teaser-1.jpg",
+        "/albums/season-of-glass/teaser-2.jpg",
+        "/albums/season-of-glass/teaser-3.jpg",
+      ],
+      tracklist: ["Sunrise -JP ver.-", "La pam pam", "Sunrise (Instrumental)", "La pam pam (Instrumental)"],
+      achievements: [
+        "Debut mini album, memperkenalkan konsep 'Glass Bead'",
+        "Title track masuk chart musik digital domestik",
+      ],
+    },
+  },
+  {
+    eyebrow: "The 3rd Japanese Single · 13 Mar 2019",
+    title: "FLOWER",
+    lines: ["A single bloom carried overseas,", "beauty translated into a new language."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["FLOWER", "Beautiful", "FLOWER (Instrumental)", "Beautiful (Instrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 8th Mini Album · 1 Jul 2019",
+    title: "FEVER SEASON",
+    lines: ["A fever of color after the heat,", "playful again, but wiser than before."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Fever", "Mr. Blue", "Smile", "Wish", "Paradise", "Hope", "FLOWER (Korean Version)", "Fever (Instrumental)"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 1st Japanese Studio Album · 13 Nov 2019",
+    title: "FALLIN' LIGHT",
+    lines: ["Falling gently into softer light,", "a full-length letter written just for Japan."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Fallin' Light", "Emotional Days", "Memoria", "The Beginning of Love", "Flower", "My My My!", "Time for the moon night -JP ver.-", "Sunrise -JP ver.-", "La pam pam", "Beautiful", "My Buddy -JP ver.-"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 9th Mini Album  · 3 Feb 2020",
+    title: "回:LABYRINTH",
+    lines: ["Wandering deeper into a maze of feeling,", "their first step into a darker, braver sound."],
+    album: {
+      cover: "/albums/season-of-glass/cover.jpg",
+      teasers: [
+        "/albums/season-of-glass/teaser-1.jpg",
+        "/albums/season-of-glass/teaser-2.jpg",
+        "/albums/season-of-glass/teaser-3.jpg",
+      ],
+      tracklist: ["Labyrinth", "Crossroads", "Here We Are", "Eclipse", "Dreamcatcher", "From Me"],
+      achievements: [
+        "Debut mini album, memperkenalkan konsep 'Glass Bead'",
+        "Title track masuk chart musik digital domestik",
+      ],
+    },
+  },
+  {
+    eyebrow: "The 10th Mini Album · 13 Jul 2020",
+    title: "回:Song of the Sirens",
+    lines: ["A siren's song pulling them somewhere new,", "temptation dressed in their boldest color yet."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Apple", "Eye of the Storm", "Room of Mirrors", "Tarot Cards", "Crème Brûlée", "Stairs in The North"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The 3rd Studio Album · 9 Nov 2020",
+    title: "回:Walpurgis Night",
+    lines: ["A night of spells before the long silence,", "their most daring chapter, cast just before dawn."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["MAGO", "Love Spell", "Three Of Cups", "GRWM", "Secret Diary", "Better Me", "Night Drive", "Apple", "Crossroads", "Labyrinth", "Wheel of the year"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
+  },
+  {
+    eyebrow: "The Special Album · 13 Jan 2025",
+    title: "SEASON OF MEMORIES",
+    lines: ["Ten years later, the circle closes,", "six voices returning to where it all began."],
+    album: {
+      cover: "/albums/flower-bud/cover.jpg",
+      teasers: [
+        "/albums/flower-bud/teaser-1.jpg",
+        "/albums/flower-bud/teaser-2.jpg",
+      ],
+      tracklist: ["Season of Memories", "Always"],
+      achievements: ["Comeback pertama, mulai dikenal luas lewat 'Me Gustas Tu'"],
+    },
   },
 ];
 
-const cameraPositions = [
-  { x: 0, y: 15, z: 140 },
-  { x: 0, y: 25, z: 40 },
-  { x: 0, y: 20, z: -60 },
-  { x: 0, y: 30, z: -160 },
-  { x: 0, y: 15, z: 140 },
-  { x: 0, y: 25, z: 40 },
-  { x: 0, y: 20, z: -60 },
-  { x: 0, y: 30, z: -160 },
+// Palet warna acuan buat era-era GFRIEND: dari ungu tua yang dingin
+// (debut) -> lebih hangat/ceria (kejayaan) -> lilac terang (rilisan
+// Jepang/side track) -> balik lagi ke ungu tua di penghujung (reunion,
+// biar terasa "pulang" ke nuansa awal). Warna tiap section nanti
+// di-interpolasi otomatis dari sini berdasarkan POSISI section itu di
+// sepanjang timeline (lihat `colorAtProgress`), jadi kalau nanti kamu
+// nambah/ngurangin era, warnanya otomatis ikut nyesuain proporsinya -
+// gak perlu di-hardcode manual satu-satu lagi.
+const ERA_PALETTE = [
+  "#5F4B8B", // ultraviolet gelap - era debut
+  "#1F6E8C", // scuba - kejayaan awal, ceria
+  "#8672B0", // ungu lilac - pertengahan
+  "#3D93B4", // scuba muda - era matang
+  "#C9BBE8", // lilac terang - rilisan Jepang / side track
+  "#5F4B8B", // balik ke ultraviolet - reunion, "pulang ke awal"
 ];
+
+function colorAtProgress(progress: number) {
+  const clamped = Math.min(Math.max(progress, 0), 1);
+  const segment = clamped * (ERA_PALETTE.length - 1);
+  const idx = Math.min(Math.floor(segment), ERA_PALETTE.length - 2);
+  const local = segment - idx;
+  const mixed = new THREE.Color(ERA_PALETTE[idx]).lerp(
+    new THREE.Color(ERA_PALETTE[idx + 1]),
+    local
+  );
+  return `#${mixed.getHexString()}`;
+}
+
+const sections: HeroSection[] = rawSections.map((section, i) => ({
+  ...section,
+  color: colorAtProgress(
+    rawSections.length > 1 ? i / (rawSections.length - 1) : 0
+  ),
+}));
+
+// Lintasan kamera di-generate otomatis mengikuti PANJANG timeline
+// (sections.length) - bukan array statis 4 posisi yang diulang-ulang.
+// Diulang bikin kamera kerasa "loncat balik" tiap 4 section sekali;
+// sekarang kamera terus bergerak maju (z makin negatif/menjauh) secara
+// konsisten dari awal sampai akhir timeline, dengan sedikit ayunan
+// halus di x/y biar gak terasa monoton lurus kayak rel kereta.
+const cameraPositions = sections.map((_, i) => {
+  const t = sections.length > 1 ? i / (sections.length - 1) : 0;
+  return {
+    x: Math.sin(i * 0.8) * 10,
+    y: 15 + Math.sin(i * 0.5) * 12,
+    z: 140 - t * 680,
+  };
+});
 
 function hexToVec3(hex: string) {
   const c = new THREE.Color(hex);
@@ -524,7 +799,7 @@ export default function GfriendHero() {
                   border-cloud/30 bg-cloud/10 px-6 py-2.5 font-body text-sm text-cloud
                   backdrop-blur-sm transition-colors hover:bg-cloud hover:text-ink"
               >
-                Lihat Detail Album
+                Album Details
                 <IconArrowRight className="h-4 w-4" />
               </motion.button>
             )}
