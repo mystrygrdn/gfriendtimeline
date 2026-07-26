@@ -58,11 +58,11 @@ const rawSections: Omit<HeroSection, "color">[] = [
     title: "SEASON OF GLASS",
     lines: ["A debut wrapped in schoolyard innocence,", "framed by the fragile shimmer of a glass bead."],
     album: {
-      cover: "/albums/season-of-glass/cover.jpg",
+      cover: "src/components/images/albums/seasonofglass/coversog.webp",
       teasers: [
-        "/albums/season-of-glass/teaser-1.jpg",
-        "/albums/season-of-glass/teaser-2.jpg",
-        "/albums/season-of-glass/teaser-3.jpg",
+        "src/components/images/albums/seasonofglass/sog1.webp",
+        "src/components/images/albums/seasonofglass/sog2.webp",
+        "src/components/images/albums/seasonofglass/sog3.webp",
       ],
       tracklist: ["Intro (Season of Glass)", "Glass Bead", "Neverland", "White", "Glass Bead (Instrumental)"],
       achievements: [
@@ -268,7 +268,7 @@ const rawSections: Omit<HeroSection, "color">[] = [
     album: {
       cover: "/albums/flower-bud/cover.jpg",
       teasers: [
-        "/albums/flower-bud/teaser-1.jpg",
+        "src/components/albums/flower-bud/teaser-1.jpg",
         "/albums/flower-bud/teaser-2.jpg",
       ],
       tracklist: ["Fever", "Mr. Blue", "Smile", "Wish", "Paradise", "Hope", "FLOWER (Korean Version)", "Fever (Instrumental)"],
