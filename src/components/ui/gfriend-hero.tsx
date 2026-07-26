@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { gsap } from "gsap";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconArrowRight } from "@tabler/icons-react";
 import AlbumDetailModal from "./album-detail-modal";
@@ -17,13 +16,17 @@ import AlbumDetailModal from "./album-detail-modal";
  * - Progress scroll dihitung dari TINGGI KONTAINER INI SENDIRI
  *   (bukan seluruh document), lewat elemen `sticky`, supaya efek
  *   ini tetap terkontrol walau ada konten lain di bawahnya.
- * - Tiap section (kalau ada `album`-nya) dapet tombol "Lihat Detail
- *   Album" yang buka popup — bukan pindah halaman — isinya galeri
- *   foto ala polaroid (bisa di-drag), tracklist, dan achievement.
- * - Warna & posisi kamera tiap section SEKARANG DI-GENERATE OTOMATIS
- *   dari panjang `rawSections` (lihat `colorAtProgress` &
- *   `cameraPositions` di bawah) — bukan di-hardcode manual, supaya
- *   selalu proporsional berapa pun banyaknya era yang kamu isi.
+ * - Tiap section (kalau ada `album`-nya) dapet tombol "Album Details"
+ *   yang buka popup — bukan pindah halaman — isinya galeri foto ala
+ *   polaroid (bisa di-drag), tracklist, dan achievement.
+ * - Warna & posisi kamera tiap section DI-GENERATE OTOMATIS dari
+ *   panjang `rawSections` (lihat `colorAtProgress` & `cameraPositions`
+ *   di bawah), jadi selalu proporsional berapa pun banyaknya era.
+ * - SEMUA judul, TANPA KECUALI, pakai satu ukuran font yang sama dan
+ *   satu animasi yang sama (fade + slide). Judul yang kepanjangan
+ *   (kayak "Memoria / 夜 (Time for the moon night)") cukup wrap ke
+ *   baris kedua secara natural, gak dikecilin/dibedain sama sekali -
+ *   biar konsisten dari section pertama sampai terakhir.
  */
 
 interface AlbumData {
@@ -38,7 +41,7 @@ interface HeroSection {
   title: string;
   lines: string[];
   color: string; // hex, dipakai untuk nebula/starfield tint & glow
-  album?: AlbumData; // opsional - kalau ada, tombol "Lihat Detail Album" muncul
+  album?: AlbumData; // opsional - kalau ada, tombol "Album Details" muncul
 }
 
 // Data mentah tiap era - TANPA `color`, soalnya warnanya di-generate
@@ -407,11 +410,9 @@ function hexToVec3(hex: string) {
 export default function GfriendHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLDivElement>(null);
 
   const [sectionIndex, setSectionIndex] = useState(0);
-  const [ready, setReady] = useState(false);
+  const [, setReady] = useState(false);
   const [isAlbumOpen, setIsAlbumOpen] = useState(false);
 
   const three = useRef<{
@@ -645,33 +646,6 @@ export default function GfriendHero() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---- gsap intro entrance ----
-  useEffect(() => {
-    if (!ready) return;
-    const tl = gsap.timeline();
-    if (titleRef.current) {
-      const chars = titleRef.current.querySelectorAll(".title-char");
-      tl.from(chars, {
-        y: 120,
-        opacity: 0,
-        duration: 1.1,
-        stagger: 0.04,
-        ease: "power4.out",
-      });
-    }
-    if (subtitleRef.current) {
-      const lines = subtitleRef.current.querySelectorAll(".subtitle-line");
-      tl.from(
-        lines,
-        { y: 30, opacity: 0, duration: 0.8, stagger: 0.12, ease: "power3.out" },
-        "-=0.6"
-      );
-    }
-    return () => {
-      tl.kill();
-    };
-  }, [ready]);
-
   // ---- scroll progress, scoped to this container only ----
   useEffect(() => {
     const handleScroll = () => {
@@ -703,13 +677,6 @@ export default function GfriendHero() {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const splitChars = (text: string) =>
-    text.split("").map((char, i) => (
-      <span key={i} className="title-char inline-block">
-        {char === " " ? "\u00A0" : char}
-      </span>
-    ));
 
   const active = sections[sectionIndex];
 
@@ -744,29 +711,25 @@ export default function GfriendHero() {
             </motion.div>
           </AnimatePresence>
 
-          <h1
-            ref={titleRef}
-            className="font-display text-4xl sm:text-6xl md:text-8xl font-extrabold text-cloud leading-none tracking-tight"
-          >
-            {sectionIndex === 0 ? (
-              splitChars(active.title)
-            ) : (
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={active.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.5 }}
-                  className="block"
-                >
-                  {active.title}
-                </motion.span>
-              </AnimatePresence>
-            )}
+          {/* Judul - satu ukuran font & satu animasi (fade + slide) yang
+              SAMA PERSIS buat semua section, gak ada pengecualian. Judul
+              panjang cukup wrap natural ke baris kedua. */}
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold text-cloud leading-tight tracking-tight max-w-5xl">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={active.title}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -24 }}
+                transition={{ duration: 0.5 }}
+                className="block"
+              >
+                {active.title}
+              </motion.span>
+            </AnimatePresence>
           </h1>
 
-          <div ref={subtitleRef} className="mt-6 max-w-xl">
+          <div className="mt-6 max-w-xl">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.lines.join("-")}
@@ -776,7 +739,7 @@ export default function GfriendHero() {
                 transition={{ duration: 0.5 }}
               >
                 {active.lines.map((line) => (
-                  <p key={line} className="subtitle-line font-body text-cloud/70 text-sm md:text-base">
+                  <p key={line} className="font-body text-cloud/70 text-sm md:text-base">
                     {line}
                   </p>
                 ))}

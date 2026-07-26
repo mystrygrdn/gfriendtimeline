@@ -29,10 +29,21 @@ export type EraCategory =
   | "disband"
   | "reunion";
 
+export interface SocialLinks {
+  instagram?: string;
+  x?: string;
+  tiktok?: string;
+  youtube?: string;
+  soundcloud?: string;
+}
+
 export interface Member {
   id: string;
   name: string;
   position: string;
+  photo?: string;
+  color?: string;
+  socials?: SocialLinks;
 }
 
 // Ini "bentuk data" utama untuk satu album/era di timeline.

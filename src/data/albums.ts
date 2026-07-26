@@ -12,12 +12,77 @@ import type { TimelineEra, Member } from "../types";
  */
 
 export const members: Member[] = [
-  { id: "sowon", name: "Sowon", position: "Leader, Vocalist" },
-  { id: "yerin", name: "Yerin", position: "Vocalist" },
-  { id: "eunha", name: "Eunha", position: "Vocalist" },
-  { id: "yuju", name: "Yuju", position: "Main Vocalist" },
-  { id: "sinb", name: "SinB", position: "Main Vocalist" },
-  { id: "umji", name: "Umji", position: "Vocalist, Maknae" },
+  {
+  id: "sowon",
+  name: "Sowon",
+  position: "Leader, Vocalist",
+  photo: "src/components/images/members/sowon.webp", // atau URL foto
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/onedayxne",
+    youtube: "https://youtube.com/@3beautysowon",
+  },
+},
+  {
+  id: "yerin",
+  name: "Yerin",
+  position: "Center, Vocalist",
+  photo: "src/components/images/members/yerin.webp",
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/every__nn",
+    youtube: "https://youtube.com/@Yerin.official",
+    x: "https://x.com/@YERIN_OFFICIAL_",
+    tiktok: "https://www.tiktok.com/@official_yerin",
+  },
+},
+  {
+  id: "eunha",
+  name: "Eunha",
+  position: "Lead Vocalist",
+  photo: "src/components/images/members/eunha.webp",
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/rlo.ldl",
+    soundcloud: "https://soundcloud.com/user-514825100",
+  },
+  },
+  {
+  id: "yuju",
+  name: "Yuju",
+  position: "Main Vocalist",
+  photo: "src/components/images/members/yuju.webp",
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/yuuzth",
+    youtube: "https://youtube.com/@YUJU_atarea",
+    x: "https://x.com/@YUJU_atarea",
+    tiktok: "https://www.tiktok.com/@yuju_atarea",
+  },
+},
+  {
+  id: "sinb",
+  name: "SinB",
+  position: "Main Dancer, Center, Vocalist",
+  photo: "src/components/images/members/sinb.webp",
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/bscenez",
+    youtube: "https://www.youtube.com/@%ED%99%A9%EC%9D%80%EB%B9%84%EC%A7%B1",
+  },
+  },
+  {
+  id: "umji",
+  name: "Umji",
+  position: "Maknae, Vocalist",
+  photo: "src/components/images/members/umji.webp",
+  color: "#5F4B8B",
+  socials: {
+    instagram: "https://instagram.com/ummmmm_j.i",
+    youtube: "https://www.youtube.com/@umazingday",
+    tiktok: "https://www.tiktok.com/@umjimuji",
+  },
+  },
 ];
 
 const allMemberIds = members.map((m) => m.id);
