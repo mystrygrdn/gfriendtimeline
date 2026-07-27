@@ -50,6 +50,14 @@ export default function ActivityCard({
 
   return (
     <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{
+        duration: 0.55,
+        delay: (index % 3) * 0.08,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       whileHover={{ y: -4 }}
       className="group relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-card transition-shadow duration-500 ease-in-out"
       style={{ boxShadow: `0 0 40px -18px ${color}80` }}
