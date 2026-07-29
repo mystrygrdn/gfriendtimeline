@@ -1,63 +1,156 @@
-import type { VarietyShow } from "../types";
+export interface VarietyShow {
+  id: string;
+  title: string;
+  category: string;
+  year: number;
+  posterColor: string; // sementara pakai warna solid, nanti bisa diganti path gambar asli
+  synopsis: string;
+}
 
-/**
- * Data variety show & konten behind-the-scenes GFRIEND.
- * `posterColor` dipakai sebagai warna gradient poster (bukan foto asli),
- * biar konsisten sama palet GFRIEND HUB tanpa perlu aset gambar eksternal.
- */
 export const varietyShows: VarietyShow[] = [
+  // ---- Performance ----
   {
-    id: "meotgool",
-    title: "GFRIEND's Meotgool",
+    id: "perf-1",
+    title: "Rough Comeback Stage",
+    category: "Performance",
     year: 2016,
-    platform: "MBC Every1",
     posterColor: "#5F4B8B",
-    synopsis:
-      "Reality show awal karier GFRIEND yang memperlihatkan sisi ceria dan kekompakan keenam member sebelum comeback-comeback besar mereka.",
+    synopsis: "Panggung comeback perdana untuk single Rough di M Countdown.",
   },
   {
-    id: "real-gfriend",
-    title: "Real GFRIEND",
-    year: 2017,
-    platform: "Naver TV",
-    posterColor: "#8672B0",
-    synopsis:
-      "Web-variety yang mengikuti keseharian member di dorm, dari latihan koreografi sampai momen santai di balik panggung.",
-  },
-  {
-    id: "moon-night-making",
-    title: "Time for the Moon Night: MV Making",
+    id: "perf-2",
+    title: "Fingertip Music Bank Stage",
+    category: "Performance",
     year: 2018,
-    platform: "1theK",
     posterColor: "#1F6E8C",
-    synopsis:
-      "Behind-the-scenes proses syuting music video paling ikonik GFRIEND, lengkap dengan cerita konsep retro di baliknya.",
+    synopsis: "Penampilan Fingertip yang jadi salah satu comeback stage paling ikonik.",
   },
   {
-    id: "cheese-in-the-trap",
-    title: "Cheese in the Trap",
-    year: 2016,
-    platform: "tvN",
+    id: "perf-3",
+    title: "Time for the Moon Night Live",
+    category: "Performance",
+    year: 2018,
+    posterColor: "#8672B0",
+    synopsis: "Panggung live Time for the Moon Night dengan koreografi khas GFRIEND.",
+  },
+
+  // ---- YouTube Variety Shows ----
+  {
+    id: "yt-variety-1",
+    title: "GFRIEND's Homework",
+    category: "YouTube Variety Shows",
+    year: 2017,
     posterColor: "#3D93B4",
-    synopsis:
-      "Drama adaptasi webtoon populer dengan SinB dalam salah satu peran pendukung, memperluas jangkauan GFRIEND ke dunia akting.",
+    synopsis: "Konten reality ringan GFRIEND mengerjakan berbagai tantangan seru.",
   },
   {
-    id: "hyena-on-the-keyboard",
-    title: "Yerin & Umji: Hyena on the Keyboard",
-    year: 2019,
-    platform: "MBC",
+    id: "yt-variety-2",
+    title: "Bloom Diary",
+    category: "YouTube Variety Shows",
+    year: 2020,
     posterColor: "#3F3061",
-    synopsis:
-      "Segmen musikal yang menampilkan sisi vokal akustik member, menunjukkan kedalaman musikalitas di luar panggung comeback.",
+    synopsis: "Vlog keseharian member selama masa promosi album Season of Memories.",
+  },
+
+  // ---- MEMORIA ----
+  {
+    id: "memoria-1",
+    title: "MEMORIA: Behind the Curtain",
+    category: "MEMORIA",
+    year: 2021,
+    posterColor: "#5F4B8B",
+    synopsis: "Dokumentasi perjalanan GFRIEND menjelang comeback terakhir mereka.",
   },
   {
-    id: "season-of-memories-doc",
-    title: "Buddy, Our Season of Memories",
-    year: 2025,
-    platform: "Weverse",
-    posterColor: "#C9BBE8",
-    synopsis:
-      "Dokumenter singkat perjalanan reuni 10 tahun GFRIEND, merekam proses persiapan comeback 'Season of Memories'.",
+    id: "memoria-2",
+    title: "MEMORIA: Final Bow",
+    category: "MEMORIA",
+    year: 2021,
+    posterColor: "#1F6E8C",
+    synopsis: "Momen-momen penutup era GFRIEND yang penuh haru dan kenangan.",
+  },
+
+  // ---- Music Videos ----
+  {
+    id: "mv-1",
+    title: "Rough Official MV",
+    category: "Music Videos",
+    year: 2016,
+    posterColor: "#8672B0",
+    synopsis: "Music video resmi untuk title track Rough.",
+  },
+  {
+    id: "mv-2",
+    title: "Fingertip Official MV",
+    category: "Music Videos",
+    year: 2018,
+    posterColor: "#3D93B4",
+    synopsis: "Music video Fingertip dengan visual dan koreografi yang jadi favorit fans.",
+  },
+  {
+    id: "mv-3",
+    title: "MAGO Official MV",
+    category: "Music Videos",
+    year: 2020,
+    posterColor: "#3F3061",
+    synopsis: "Music video MAGO, comeback dengan konsep dark fantasy.",
+  },
+
+  // ---- G-LOG ----
+  {
+    id: "glog-1",
+    title: "G-LOG: Trip to Jeju",
+    category: "G-LOG",
+    year: 2019,
+    posterColor: "#5F4B8B",
+    synopsis: "Vlog perjalanan santai member GFRIEND ke Pulau Jeju.",
+  },
+
+  // ---- Special Clips ----
+  {
+    id: "clip-1",
+    title: "Backstage Talk: Season of Memories",
+    category: "Special Clips",
+    year: 2020,
+    posterColor: "#1F6E8C",
+    synopsis: "Obrolan santai member di balik panggung comeback Season of Memories.",
+  },
+  {
+    id: "clip-2",
+    title: "GFRIEND Photobook Making Film",
+    category: "Special Clips",
+    year: 2019,
+    posterColor: "#8672B0",
+    synopsis: "Proses pemotretan photobook spesial GFRIEND.",
+  },
+
+  // ---- G-ING ----
+  {
+    id: "ging-1",
+    title: "G-ING Episode 1: Welcome",
+    category: "G-ING",
+    year: 2019,
+    posterColor: "#3D93B4",
+    synopsis: "Episode perdana konten reality G-ING bersama member GFRIEND.",
+  },
+
+  // ---- Song Covers ----
+  {
+    id: "cover-1",
+    title: "GFRIEND Covers - Latata",
+    category: "Song Covers",
+    year: 2017,
+    posterColor: "#3F3061",
+    synopsis: "Member GFRIEND membawakan cover lagu grup idol lain.",
+  },
+
+  // ---- Others ----
+  {
+    id: "others-1",
+    title: "Fan Meeting Highlight",
+    category: "Others",
+    year: 2019,
+    posterColor: "#5F4B8B",
+    synopsis: "Cuplikan momen seru dari fan meeting GFRIEND bersama Buddy.",
   },
 ];

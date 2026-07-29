@@ -33,6 +33,15 @@ export default {
       boxShadow: {
         card: "0 20px 60px -15px rgba(95, 75, 139, 0.35)",
       },
+      keyframes: {
+        twinkle: {
+          "0%, 100%": { opacity: "0.15" },
+          "50%": { opacity: "0.9" },
+        },
+      },
+      animation: {
+        twinkle: "twinkle 4s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

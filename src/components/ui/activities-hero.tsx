@@ -1,25 +1,49 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { IconChevronDown } from "@tabler/icons-react";
+import { useRef } from "react";
 
 export default function ActivitiesHero({
   photo,
 }: {
   photo: string;
 }) {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  // background bergerak lebih lambat dari scroll (parallax)
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  // konten teks fade + geser naik lebih cepat saat mulai di-scroll
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-15%"]);
+  // overlay makin gelap/pekat menjelang akhir hero, mempermulus transisi ke section berikutnya
+  const overlayOpacity = useTransform(scrollYProgress, [0.4, 1], [0, 1]);
+
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-ink">
-      <div
+    <section ref={ref} className="relative h-screen w-full overflow-hidden bg-ink">
+      <motion.div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${photo})` }}
+        style={{ backgroundImage: `url(${photo})`, y: bgY, scale: 1.15 }}
       />
 
-      {/* dark overlay untuk keterbacaan teks */}
+      {/* dark overlay dasar untuk keterbacaan teks */}
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/10" />
 
-      {/* fade transisi menuju section berikutnya (tetap gelap, konsisten dgn homepage) */}
+      {/* overlay tambahan yang menguat seiring scroll, jadi transisi ke section bawah terasa mulus */}
+      <motion.div
+        className="absolute inset-0 bg-ink"
+        style={{ opacity: overlayOpacity }}
+      />
+
+      {/* fade dasar menuju warna section berikutnya */}
       <div className="absolute inset-x-0 bottom-0 h-40 md:h-56 bg-gradient-to-b from-transparent to-ink" />
 
-      <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-24">
+      <motion.div
+        style={{ opacity: contentOpacity, y: contentY }}
+        className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-24"
+      >
         <motion.span
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,11 +70,12 @@ export default function ActivitiesHero({
         >
           Kegiatan terbaru masing-masing member — ikuti langkah mereka di luar panggung.
         </motion.p>
-      </div>
+      </motion.div>
 
       <motion.div
+        style={{ opacity: contentOpacity }}
         animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ y: { duration: 1.8, repeat: Infinity, ease: "easeInOut" } }}
         className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-cloud/50"
       >
         <IconChevronDown className="h-6 w-6" />

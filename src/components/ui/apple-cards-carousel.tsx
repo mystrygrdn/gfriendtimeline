@@ -6,9 +6,10 @@ import React, {
   useContext,
 } from "react";
 import {
-  IconArrowNarrowLeft,
-  IconArrowNarrowRight,
+  IconChevronLeft,
+  IconChevronRight,
   IconX,
+  IconPlayerPlayFilled,
 } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "../../hooks/use-outside-click";
@@ -19,7 +20,7 @@ interface CarouselProps {
 }
 
 export type Card = {
-  src: string; // dipakai sebagai warna poster (bukan URL gambar)
+  src: string;
   category: string;
   title: string;
   content: React.ReactNode;
@@ -50,49 +51,40 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const checkScrollability = () => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 2);
+      setCanScrollLeft(scrollLeft > 4);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 4);
     }
   };
 
-  const scrollLeft = () => {
-    carouselRef.current?.scrollBy({ left: -300, behavior: "smooth" });
-  };
-
-  const scrollRight = () => {
-    carouselRef.current?.scrollBy({ left: 300, behavior: "smooth" });
-  };
+  const scrollLeft = () => carouselRef.current?.scrollBy({ left: 560, behavior: "smooth" });
+  const scrollRight = () => carouselRef.current?.scrollBy({ left: 560, behavior: "smooth" });
 
   const handleCardClose = (index: number) => {
     if (carouselRef.current) {
-      const cardWidth = window.innerWidth < 768 ? 230 : 320;
-      const gap = window.innerWidth < 768 ? 16 : 24;
-      const scrollPosition = (cardWidth + gap) * (index + 1);
-      carouselRef.current.scrollTo({
-        left: scrollPosition,
-        behavior: "smooth",
-      });
+      const cardWidth = window.innerWidth < 768 ? 320 : 440;
+      const gap = 28;
+      carouselRef.current.scrollTo({ left: (cardWidth + gap) * (index + 1), behavior: "smooth" });
       setCurrentIndex(index);
     }
   };
 
   return (
     <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
-      <div className="relative w-full">
+      <div className="group/carousel relative w-full">
         <div
-          className="flex w-full overflow-x-scroll overscroll-x-auto scroll-smooth py-6 [scrollbar-width:none] md:py-10"
+          className="flex w-full overflow-x-scroll overscroll-x-auto scroll-smooth [scrollbar-width:none]"
           ref={carouselRef}
           onScroll={checkScrollability}
         >
-          <div className="flex flex-row justify-start gap-4 pl-4 md:gap-6 md:pl-6 max-w-6xl mx-auto">
+          <div className="flex flex-row justify-start gap-6 md:gap-7 max-w-7xl mx-auto px-6 md:px-10 w-full">
             {items.map((item, index) => (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.06 * index, ease: "easeOut" }}
+                transition={{ duration: 0.5, delay: 0.04 * index, ease: "easeOut" }}
                 key={"card" + index}
-                className="rounded-3xl last:pr-4 md:last:pr-6"
+                className="shrink-0"
               >
                 {item}
               </motion.div>
@@ -100,24 +92,24 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pr-4 md:pr-6 mt-2">
+        {canScrollLeft && (
           <button
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 border border-white/60 shadow-card disabled:opacity-40"
-            onClick={scrollLeft}
-            disabled={!canScrollLeft}
+            onClick={() => carouselRef.current?.scrollBy({ left: -560, behavior: "smooth" })}
             aria-label="Sebelumnya"
+            className="absolute left-3 top-[38%] -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-ink/60 backdrop-blur-md opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300"
           >
-            <IconArrowNarrowLeft className="h-5 w-5 text-ultraviolet-dark" />
+            <IconChevronLeft className="h-5 w-5 text-cloud/80" />
           </button>
+        )}
+        {canScrollRight && (
           <button
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 border border-white/60 shadow-card disabled:opacity-40"
             onClick={scrollRight}
-            disabled={!canScrollRight}
             aria-label="Berikutnya"
+            className="absolute right-3 top-[38%] -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-ink/60 backdrop-blur-md opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300"
           >
-            <IconArrowNarrowRight className="h-5 w-5 text-ultraviolet-dark" />
+            <IconChevronRight className="h-5 w-5 text-cloud/80" />
           </button>
-        </div>
+        )}
       </div>
     </CarouselContext.Provider>
   );
@@ -153,29 +145,47 @@ export const VarietyCard = ({ card, index }: { card: Card; index: number }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-ink/70 backdrop-blur-sm"
+              className="fixed inset-0 bg-ink/90 backdrop-blur-md"
+              onClick={handleClose}
             />
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               ref={containerRef}
-              className="relative z-[60] mx-auto my-10 max-w-2xl rounded-3xl bg-cloud p-6 md:p-10 font-body shadow-card"
+              className="relative z-[60] mx-auto my-12 max-w-2xl rounded-2xl bg-[#221E2C] overflow-hidden"
             >
-              <button
-                onClick={handleClose}
-                className="sticky top-4 float-right flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-card"
-                aria-label="Tutup"
-              >
-                <IconX className="h-5 w-5 text-ink" />
-              </button>
-              <p className="font-mono text-xs tracking-widest uppercase text-scuba">
-                {card.category}
-              </p>
-              <h3 className="mt-2 font-display text-2xl md:text-4xl font-bold text-ink">
-                {card.title}
-              </h3>
-              <div className="mt-6 text-ink/70 leading-relaxed">{card.content}</div>
+              <div className="relative aspect-video w-full" style={{ backgroundColor: "#2A2536" }}>
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `linear-gradient(160deg, ${card.src}40, transparent 70%)` }}
+                />
+                <button
+                  onClick={handleClose}
+                  className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-ink/50 backdrop-blur-sm"
+                  aria-label="Tutup"
+                >
+                  <IconX className="h-4 w-4 text-cloud" />
+                </button>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-cloud">
+                    <IconPlayerPlayFilled className="h-5 w-5 text-ink translate-x-[1px]" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-8 md:p-10">
+                <p className="font-mono text-xs tracking-widest uppercase text-cloud/40">
+                  {card.category}
+                </p>
+                <h3 className="mt-2 font-display text-3xl font-bold text-cloud">
+                  {card.title}
+                </h3>
+                <div className="mt-4 text-cloud/55 leading-relaxed text-base">
+                  {card.content}
+                </div>
+              </div>
             </motion.div>
           </div>
         )}
@@ -183,18 +193,32 @@ export const VarietyCard = ({ card, index }: { card: Card; index: number }) => {
 
       <motion.button
         onClick={() => setOpen(true)}
-        className="relative z-10 flex h-72 w-56 flex-col items-start justify-end overflow-hidden rounded-3xl text-left md:h-[26rem] md:w-72
-          shadow-card border border-white/30"
-        style={{
-          background: `linear-gradient(160deg, ${card.src}, ${card.src}dd 55%, #18151F 130%)`,
-        }}
+        whileHover={{ y: -6 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="group relative flex flex-col text-left w-[320px] md:w-[440px] shrink-0"
       >
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
-        <div className="relative z-10 p-5 md:p-6">
-          <p className="font-mono text-[10px] md:text-xs tracking-widest uppercase text-cloud/70">
+        <div
+          className="relative aspect-video w-full overflow-hidden rounded-2xl"
+          style={{ backgroundColor: "#26222F" }}
+        >
+          <div
+            className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]"
+            style={{ background: `linear-gradient(150deg, ${card.src}66, transparent 75%)` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-cloud/95">
+              <IconPlayerPlayFilled className="h-5 w-5 text-ink translate-x-[1px]" />
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-4">
+          <p className="font-mono text-[11px] tracking-widest uppercase text-cloud/35">
             {card.category}
           </p>
-          <p className="mt-1 font-display text-lg md:text-2xl font-semibold text-cloud leading-tight">
+          <p className="mt-1.5 font-display text-lg font-semibold text-cloud/90 leading-snug line-clamp-1">
             {card.title}
           </p>
         </div>
