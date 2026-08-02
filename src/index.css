@@ -10,3 +10,32 @@
   background: theme("colors.ultraviolet.light");
   border-radius: 999px;
 }
+/* Scrollbar utilities */
+.scrollbar-none {
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE/Edge lama */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari/Edge baru */
+}
+
+/* Versi tipis buat area yang MEMANG perlu kelihatan bisa di-scroll,
+   misal list kemenangan di dalam card Music Show Wins */
+.scrollbar-thin-glow {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(95, 75, 139, 0.35) transparent;
+}
+.scrollbar-thin-glow::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scrollbar-thin-glow::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin-glow::-webkit-scrollbar-thumb {
+  background-color: rgba(95, 75, 139, 0.35);
+  border-radius: 999px;
+}
+.scrollbar-thin-glow::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(95, 75, 139, 0.55);
+}
